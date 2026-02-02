@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cover Letter Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-robot"></i>
+                <span>CoverCraft AI</span>
+            </div>
+            <h1>Generate Your Perfect Cover Letter</h1>
+            <p>Upload your resume or enter details, and let AI write the rest.</p>
+        </header>
+
+        <main class="grid-layout">
+            <section class="form-card glass-panel">
+                <form id="generatorForm">
+                    <div class="input-group">
+                        <label for="resume">
+                            <i class="fa-solid fa-file-pdf"></i> Upload Resume (Optional)
+                        </label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="resume" name="resume" accept=".pdf" class="file-input">
+                            <span class="file-name" id="fileName">Drag & drop or click to upload PDF</span>
+                        </div>
+                    </div>
+
+                    <div class="divider"><span>OR ENTER MANUALLY</span></div>
+
+                    <div class="input-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="e.g. Alex Johnson">
+                    </div>
+
+                    <div class="input-group double">
+                        <div>
+                            <label for="jobRole">Target Job Role</label>
+                            <input type="text" id="jobRole" name="jobRole" placeholder="e.g. Frontend Developer" required>
+                        </div>
+                        <div>
+                            <label for="company">Company Name</label>
+                            <input type="text" id="company" name="company" placeholder="e.g. TechCorp Inc." required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="skills">Key Skills (comma separated)</label>
+                        <textarea id="skills" name="skills" rows="3" placeholder="e.g. React, Node.js, Team Leadership, Problem Solving"></textarea>
+                    </div>
+
+                    <button type="submit" class="generate-btn">
+                        <span class="btn-text">Generate Cover Letter</span>
+                        <span class="loader hidden"></span>
+                    </button>
+                </form>
+            </section>
+
+            <section class="result-card glass-panel hidden" id="resultSection">
+                <div class="result-header">
+                    <h2>Your Cover Letter</h2>
+                    <button class="copy-btn" id="copyBtn" title="Copy to Clipboard">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+                <div class="result-content" id="resultContent">
+                    <!-- AI Content will go here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
