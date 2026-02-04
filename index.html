@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>AI Cover Letter Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Puter AI SDK -->
+    <script src="https://js.puter.com/v2/"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        p {
+            color: #555;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin-top: 16px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 18px;
+            font-size: 14px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .output {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            background: #444;
+        }
+
+        .loading {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>AI Cover Letter Generator</h1>
+        <p>Generate a professional, personalized cover letter using AI.</p>
+
+        <label>Candidate Name</label>
+        <input id="name" placeholder="Your full name" />
+
+        <label>Job Role</label>
+        <input id="role" placeholder="e.g. Frontend Developer" />
+
+        <label>Company Name</label>
+        <input id="company" placeholder="Company you are applying to" />
+
+        <label>Key Skills</label>
+        <textarea id="skills" placeholder="React, JavaScript, APIs, teamwork..."></textarea>
+
+        <button id="generateBtn">Generate Cover Letter</button>
+
+        <div class="loading" id="loading" style="display:none;">
+            Generating cover letter…
+        </div>
+
+        <div class="output" id="output" style="display:none;"></div>
+
+        <button class="copy-btn" id="copyBtn" style="display:none;">
+            Copy to Clipboard
+        </button>
+
+        <button class="copy-btn" id="pdfBtn" style="display:none;">
+            Export as PDF
+        </button>
+    </div>
+
+    <script>
+        const btn = document.getElementById("generateBtn");
+        const output = document.getElementById("output");
+        const loading = document.getElementById("loading");
+        const copyBtn = document.getElementById("copyBtn");
+        const pdfBtn = document.getElementById("pdfBtn");
+
+        btn.onclick = async () => {
+            const name = document.getElementById("name").value;
+            const role = document.getElementById("role").value;
+            const company = document.getElementById("company").value;
+            const skills = document.getElementById("skills").value;
+
+            if (!name || !role || !company || !skills) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            btn.disabled = true;
+            loading.style.display = "block";
+            output.style.display = "none";
+            copyBtn.style.display = "none";
+            pdfBtn.style.display = "none";
+
+            const prompt = `
+Write a professional cover letter.
+
+Candidate Name: ${name}
+Job Role: ${role}
+Company Name: ${company}
+Key Skills: ${skills}
+
+The tone should be confident, polite, and human.
+Use proper paragraphs.
+Do not use bullet points.
+      `;
+
+            try {
+                const response = await puter.ai.chat(prompt);
+                output.textContent = response;
+                output.style.display = "block";
+                copyBtn.style.display = "inline-block";
+                pdfBtn.style.display = "inline-block";
+            } catch (err) {
+                output.textContent = "Something went wrong. Please try again.";
+                output.style.display = "block";
+            }
+
+            loading.style.display = "none";
+            btn.disabled = false;
+        };
+
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(output.textContent);
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => copyBtn.textContent = "Copy to Clipboard", 1500);
+        };
+
+        pdfBtn.onclick = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFont("Times", "Normal");
+            doc.setFontSize(12);
+
+            const margin = 20;
+            const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+            const textLines = doc.splitTextToSize(output.textContent, pageWidth);
+
+            doc.text(textLines, margin, 30);
+            doc.save("Cover_Letter.pdf");
+        };
+    </script>
+</body>
+
+</html>
